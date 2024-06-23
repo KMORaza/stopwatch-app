@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stopwatch</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Courier+Prime&display=swap">
+<style>
+  body {
+    font-family: 'Kanit', sans-serif; /* Use Kanit font for the body */
+    text-align: center;
+    background-color: black; /* Set background color outside the container */
+    color: white; /* Set default font color */
+    height: 100vh; /* Ensure body takes full height of viewport */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0; /* Remove default margin */
+    padding: 20px; /* Add padding around the body */
+  }
+
+  .container {
+    border: 2px solid white; /* Changed border color to white */
+    padding: 20px;
+    border-radius: 10px; /* Rounded corners */
+    background-color: #00CCCC; /* Background color of the container */
+    width: 300px; /* Set a fixed width for the container */
+  }
+
+  .stopwatch {
+    font-family: 'Courier Prime', monospace; /* Use Courier Prime font for the stopwatch */
+    font-size: 2em;
+    margin-bottom: 20px;
+    border: 2px solid white;
+    border-radius: 5px; /* Rounded corners */
+    padding: 10px;
+    background-color: black; /* Background color inside the stopwatch */
+    color: white; /* Font color */
+  }
+
+  .controls {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+  }
+
+  .controls button {
+    font-family: 'Kanit', sans-serif; /* Use Kanit font for the buttons */
+    background-color: #003366;
+    color: white;
+    border: 2px solid white;
+    border-radius: 5px; /* Rounded corners */
+    padding: 10px 20px;
+    font-size: 1em;
+    cursor: pointer;
+    outline: none; /* Remove default outline */
+    margin: 0 5px; /* Adding margin to create a gap between buttons */
+  }
+
+  .controls button:disabled {
+    background-color: #ccc;
+    color: #666;
+    cursor: not-allowed;
+  }
+</style>
+</head>
+<body>
+  <div class="container">
+    <div class="stopwatch">0:00:00.000</div>
+    <div class="controls">
+      <button onclick="start()" id="startBtn">Start</button>
+      <button onclick="stop()" id="stopBtn" disabled>Stop</button>
+      <button onclick="reset()">Reset</button>
+    </div>
+  </div>
+
+  <script>
+    let timer; // Timer variable
+    let startTime; // Start time of the stopwatch
+    let totalElapsedTime = 0; // Total elapsed time in milliseconds
+
+    function start() {
+      startTime = Date.now() - totalElapsedTime;
+      timer = setInterval(updateTime, 10); // Update every 10 milliseconds
+      document.getElementById('startBtn').disabled = true;
+      document.getElementById('stopBtn').disabled = false;
+    }
+
+    function stop() {
+      clearInterval(timer);
+      timer = null;
+      document.getElementById('startBtn').disabled = false;
+      document.getElementById('stopBtn').disabled = true;
+    }
+
+    function reset() {
+      clearInterval(timer);
+      timer = null;
+      totalElapsedTime = 0;
+      document.querySelector('.stopwatch').textContent = '0:00:00.000';
+      document.getElementById('startBtn').disabled = false;
+      document.getElementById('stopBtn').disabled = true;
+    }
+
+    function updateTime() {
+      totalElapsedTime = Date.now() - startTime;
+      const time = formatTime(totalElapsedTime);
+      document.querySelector('.stopwatch').textContent = time;
+    }
+
+    function formatTime(milliseconds) {
+      const date = new Date(milliseconds);
+      const hours = date.getUTCHours().toString().padStart(2, '0');
+      const minutes = date.getUTCMinutes().toString().padStart(2, '0');
+      const seconds = date.getUTCSeconds().toString().padStart(2, '0');
+      const millisecondsFormatted = date.getUTCMilliseconds().toString().padStart(3, '0');
+      return `${hours}:${minutes}:${seconds}.${millisecondsFormatted}`;
+    }
+  </script>
+</body>
+</html>
